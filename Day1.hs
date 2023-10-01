@@ -1,16 +1,24 @@
-find :: Eq a => [a] -> a -> Int
-find [] target = -1
-find range target = if maximum [if (range!!i) == target then i else -1 | i <- [1..(pred (length range))]]
+readInts :: String -> [Int]
+readInts s = [read line | line <- (lines s)]
 
-myLines :: String -> [String]
-myLines str = if '\n' `elem` str then ((take (find str '\n') str) : myLines (drop (succ (find str '\n')) str)) else str
+prod :: [Int] -> Int
+prod [] = 1
+prod (x:xs) = x * (prod xs)
 
-test range target i = if (range!!i) == target then i else (length range)
+findSumPair :: [Int] -> Int -> [Int]
+findSumPair [] sum = []
+findSumPair [_] sum = []
+findSumPair (x:xs) sum = if (sum-x) `elem` xs
+	then [x,sum-x]
+	else findSumPair xs sum
 
--- main = readFile "./Day1-input.txt" >>= \input ->
--- 	print (myLines input)
-poem = "Do not ask for whom the bell tolls\nIt tolls for thee."
-main = print(lines poem)
+findSumTriplet :: [Int] -> Int -> [Int]
+findSumTriplet [] sum = []
+findSumTriplet [_] sum = []
+findSumTriplet [_,_] sum = []
+findSumTriplet (x:xs) sum = if (findSumPair xs $ sum-x) /= []
+	then x:(findSumPair xs (sum-x))
+	else findSumTriplet xs sum
 
-
- https://github.com/SixteenThousand/Advent-Of-Code-2020.git
+main = readFile "./Day1-input.txt" >>=
+		\x -> print $ prod $ findSumTriplet (readInts x) 2020

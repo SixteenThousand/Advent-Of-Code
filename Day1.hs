@@ -11,3 +11,6 @@ test range target i = if (range!!i) == target then i else (length range)
 -- 	print (myLines input)
 poem = "Do not ask for whom the bell tolls\nIt tolls for thee."
 main = print(lines poem)
+
+
+ https://github.com/SixteenThousand/Advent-Of-Code-2020.git

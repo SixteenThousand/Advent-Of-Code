@@ -92,7 +92,7 @@ public class Day6 {
 			}
 			return sum;
 		} catch(FileNotFoundException e) {
-			System.out.println("fuck.");
+			System.out.println("darn.");
 			System.exit(1);
 			return -1;
 		}

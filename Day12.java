@@ -6,7 +6,7 @@ import java.util.regex.*;
 class Day12 {
 	public static void main(String[] args) {
 		Ship b = new Ship();
-		b.runFile("./zeno.txt");
+		b.runFile("./Day12-input.txt");
 		System.out.println(b.manhattan());
 	}
 	
@@ -90,7 +90,6 @@ class Boat {
 	}
 }
 
-
 class Vec {
 	public int x;
 	public int y;
@@ -150,10 +149,10 @@ class Ship {
 				position.add(waypoint,value);
 				break;
 			case 'L':
-				waypoint.left(value);
+				waypoint.left(value/90);
 				break;
 			case 'R':
-				waypoint.right(value);
+				waypoint.right(value/90);
 				break;
 			case 'E':
 				waypoint.x += value;
@@ -170,7 +169,6 @@ class Ship {
 			default:
 				System.out.println("oops!");
 		}
-		System.out.println(position.toString()); // debug
 	}
 	
 	public void runFile(String path) {
@@ -182,7 +180,10 @@ class Ship {
 			do {
 				m = p.matcher(scan.nextLine());
 				if(m.matches())
-					runCommand(m.group(1).charAt(0),Integer.parseInt(m.group(2)));
+					runCommand(
+						m.group(1).charAt(0),
+						Integer.parseInt(m.group(2))
+					);
 			} while(scan.hasNextLine());
 		} catch(FileNotFoundException e) {
 			System.out.println("oops!");

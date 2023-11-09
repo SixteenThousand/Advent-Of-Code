@@ -100,7 +100,7 @@ class Day13 {
 	
 	public static long part2(String path) {
 		try {
-			File fp =new File("./zeno.txt");
+			File fp =new File(path);
 			Scanner scan = new Scanner(fp);
 			scan.nextLine();
 			String[] data = scan.nextLine().split(",");
@@ -108,11 +108,11 @@ class Day13 {
 			List<Long> busTimes = new ArrayList<Long>();
 			for(int i=0; i<data.length; i++) {
 				if(!data[i].equals("x")) {
-					busIDs.add(Long.parseLong(data[i]));
-					busTimes.add(i);
+					long id = Long.parseLong(data[i]);
+					busIDs.add(id);
+					busTimes.add(id - i);
 				}
 			}
-			
 			return crt(busIDs,busTimes);
 		} catch(FileNotFoundException e) {
 			System.out.println("darn.");
@@ -122,7 +122,14 @@ class Day13 {
 	}
 	
 	public static long crt(List<Long> moduli, List<Long> residues) {
-		
-		return -1;
+		long minSoln = residues.get(0);
+		long solnsGap = moduli.get(0);
+		for(int i=moduli.size()-1; i>0; i++) {
+			while(minSoln%moduli.get(i) != residues.get(i)) {
+				minSoln += solnsGap;
+			}
+			solnsGap *= moduli.get(i);
+		}
+		return minSoln;
 	}
 }

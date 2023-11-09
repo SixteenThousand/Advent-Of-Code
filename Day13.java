@@ -2,29 +2,9 @@ import java.util.*;
 import java.util.stream.*;
 import java.io.*;
 
-class Bus implements Comparable<Bus> {
-	public int id;
-	public int time;
-	
-	public Bus(int id, int time) {
-		this.id = id;
-		this.time = time;
-	}
-	
-	public int compareTo(Bus that) {
-		int tmp = this.id - that.id;
-		return tmp == 0 ? this.time - that.time : tmp;
-	}
-	
-	public String toString() {
-		return String.format("{id=%d, time=%d}",id,time);
-	}
-}
-
-
 class Day13 {
 	public static void main(String[] args) {
-		System.out.println(part2());
+		System.out.println(part2("./Day13-input.txt"));
 	}
 	
 	public static void part1() {
@@ -64,50 +44,85 @@ class Day13 {
 		return s.equals("x") ? -1 : Integer.parseInt(s);
 	}
 	
-	public static long part2() {
+	public static long part2_v2(String path) {
 		try {
-			File fp = new File("./zeno.txt");
+			// get the data!
+			File fp = new File(path);
 			Scanner scan = new Scanner(fp);
 			scan.nextLine();
-			int[] data = Arrays.stream(scan.nextLine().split(","))
-				.mapToInt(Day13::getID)
-				.toArray();
-			List<Bus> busesList = new ArrayList<Bus>();
-			for(int i=0; i<data.length; i++) {
-				if(data[i] != -1)
-					busesList.add(new Bus(data[i],i));
-			}
-			Bus[] buses = new Bus[busesList.size()];
-			busesList.toArray(buses);
-			Arrays.sort(buses);
-			System.out.println(Arrays.toString(buses));
-			
+			String[] rawData = scan.nextLine().split(",");
+			List<Long> ids = new ArrayList<Long>();
 			List<Long> times = new ArrayList<Long>();
-			long maxTime = 1;
-			for(int i=0; i<buses.length; i++) {
-				maxTime *= buses[i].id;
-			}
-			long time = 0;
-			while(time <= maxTime) {
-				times.add(time);
-				time += buses[buses.length-1].id;
+			ids.add(Long.parseLong(rawData[0]));
+			final long ZERO = 0;
+			times.add(ZERO);
+			long tmpTime = 1, tmpID;
+			for(int i=1; i<rawData.length; i++) {
+				if(!rawData[i].equals("x")) {
+					tmpID = Long.parseLong(rawData[i]);
+					ids.add(tmpID);
+					times.add(tmpID - tmpTime);
+				}
+				tmpTime++;
 			}
 			
-			boolean isResult;
-			for(int i=0; i<times.size(); i++) {
-				isResult = true;
-				for(int j=0; j<buses.length-1; j++) {
-					if(times.get(i)%buses[j].id != buses[j].time) {
-						isResult = false;
-						break;
-					}
-				}
-				if(isResult)
-					return times.get(i);
+			long maxTime = 1;
+			for(long id: ids) {
+				maxTime *= id;
 			}
+			
+			List<Long> sieve = new ArrayList<Long>();
+			tmpTime = 0;
+			while(tmpTime <= maxTime) {
+				sieve.add(tmpTime);
+				tmpTime += ids.get(0);
+				System.out.println("processing");
+			}
+			
+			List<Long> toKeep = new ArrayList<Long>();
+			System.out.println(times.get(1));
+			
+			for(int i=1; i<ids.size(); i++) {
+				for(long x: sieve) {
+					if(x%ids.get(i) == times.get(i))
+						toKeep.add(x);
+				}
+				sieve.retainAll(toKeep);
+				toKeep.clear();
+			}
+			return sieve.get(0);
 		} catch(FileNotFoundException e) {
+			System.out.println("oops");
 			System.exit(1);
 		}
+		return -1;
+	}
+	
+	public static long part2(String path) {
+		try {
+			File fp =new File("./zeno.txt");
+			Scanner scan = new Scanner(fp);
+			scan.nextLine();
+			String[] data = scan.nextLine().split(",");
+			List<Long> busIDs = new ArrayList<Long>();
+			List<Long> busTimes = new ArrayList<Long>();
+			for(int i=0; i<data.length; i++) {
+				if(!data[i].equals("x")) {
+					busIDs.add(Long.parseLong(data[i]));
+					busTimes.add(i);
+				}
+			}
+			
+			return crt(busIDs,busTimes);
+		} catch(FileNotFoundException e) {
+			System.out.println("darn.");
+			System.exit(1);
+		}
+		return -1;
+	}
+	
+	public static long crt(List<Long> moduli, List<Long> residues) {
+		
 		return -1;
 	}
 }

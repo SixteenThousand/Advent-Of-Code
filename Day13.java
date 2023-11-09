@@ -124,7 +124,7 @@ class Day13 {
 	public static long crt(List<Long> moduli, List<Long> residues) {
 		long minSoln = residues.get(0);
 		long solnsGap = moduli.get(0);
-		for(int i=moduli.size()-1; i>0; i++) {
+		for(int i=1; i<moduli.size(); i++) {
 			while(minSoln%moduli.get(i) != residues.get(i)) {
 				minSoln += solnsGap;
 			}

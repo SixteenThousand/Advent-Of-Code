@@ -1,3 +1,8 @@
+// for anyone reading this, I hate this code too. I really do.
+// the reason it's like this is that the only "nice" way to solve part 2
+// would be to create a general modular congruences solver, which is way more
+// work than is reasonable for an exercise
+// I'm sorry
 import java.util.*;
 import java.util.stream.*;
 import java.io.*;
@@ -104,16 +109,16 @@ class Day13 {
 			Scanner scan = new Scanner(fp);
 			scan.nextLine();
 			String[] data = scan.nextLine().split(",");
-			List<Long> busIDs = new ArrayList<Long>();
-			List<Long> busTimes = new ArrayList<Long>();
+			List<Cong> buses = new ArrayList<Cong>();
 			for(int i=0; i<data.length; i++) {
 				if(!data[i].equals("x")) {
 					long id = Long.parseLong(data[i]);
-					busIDs.add(id);
-					busTimes.add(id - i);
+					buses.add(new Cong(id,i == 0 ? 0 : id-i));
 				}
 			}
-			return crt(busIDs,busTimes);
+			// %$!& it, let's just do it by hand
+			System.out.println(buses.toString());
+			return 0;
 		} catch(FileNotFoundException e) {
 			System.out.println("darn.");
 			System.exit(1);
@@ -129,6 +134,57 @@ class Day13 {
 				minSoln += solnsGap;
 			}
 			solnsGap *= moduli.get(i);
+		}
+		return minSoln;
+	}
+}
+
+
+class Cong implements Comparable<Cong> {
+	public long modulus;
+	public long residue;
+	
+	public Cong(long modulus, long residue) {
+		this.modulus = modulus;
+		this.residue = residue;
+	}
+	
+	public String toString() {
+		return String.format("Mod: %d, Res: %d");
+	}
+	
+	public int compareTo(Cong that) {
+		if(this.modulus > that.modulus) {
+			return -1;
+		}
+		if(this.modulus == that.modulus && this.residue > that.residue) {
+			return -1;
+		}
+		if(this.modulus == that.modulus && this.residue == that.residue) {
+			return 0;
+		}
+		return 1;
+	}
+}
+
+
+class CRT {
+	public Cong[] congruences;
+	
+	public CRT(List<Cong> congruences) {
+		Cong[] congs = new Cong[congruences.size()];
+		Arrays.sort(congruences.toArray(congs));
+		this.congruences = congs;
+	}
+	
+	public long solve() {
+		long minSoln = congruences[0].residue;
+		long solnsGap = congruences[0].modulus;
+		for(int i=1; i<congruences.length; i++) {
+			while(minSoln%congruences[i].modulus != congruences[i].residue) {
+				minSoln += solnsGap;
+			}
+			solnsGap *= congruences[i].modulus;
 		}
 		return minSoln;
 	}

@@ -5,3 +5,5 @@ hak.*
 zeno.*
 yona*
 *.class
+*.exe
+*.o

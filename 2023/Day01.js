@@ -46,11 +46,7 @@ function getCalibration2(line) {
 function solution(input) {
 	try {
 		let data = fs.readFileSync(input,"utf8").split("\n");
-		// for(let datum of data) {
-		// 	console.log(`--${datum}--`);
-		// }
 		data.pop();
-		// data = data.slice(900,data.length);
 		let ans = data 
 			.map(getCalibration2)
 			.reduce((acc,x) => acc+x, 0);

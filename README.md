@@ -1,6 +1,6 @@
 # Hello!
 
-This repo contains my soltuions to Advent of Code problems, an annual set of
+This repo contains my solutions to Advent of Code problems, an annual set of
 coding challenges you can find ![here](https://adventofcode.com/).
 
 Please note I haven't focussed on writing clean code here, just solving the

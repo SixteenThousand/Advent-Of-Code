@@ -15,6 +15,7 @@ zeno*
 *.[oa]
 *.cmi
 *.cmo
+*.yonax
 Day01
 Day02
 Day03

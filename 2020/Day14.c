@@ -117,9 +117,17 @@ void longtobinstr(long num, char *binstr, int width) {
     }
 }
 
-
-int main() {
-    // run("./Day14-input.txt");
-    run("./gija");
-    printf("%ld\n",sum());
+/**
+ * Converts a given null-terminated character array to a long,
+ * where the char* is a positive integer written in binary.
+ *  @param binstr: char* - the given char*
+ */
+long binstrtolong(char *binstr) {
+    long result = 0;
+    long power = 1;
+    while(power > 0 && *binstr != '\0') {
+        if(*binstr == '1') result += power;
+        power <<= 1;
+    }
+    return result;
 }

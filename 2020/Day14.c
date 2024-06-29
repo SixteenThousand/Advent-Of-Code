@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define LINE_LEN 100
+#define VALUE_WIDTH 36
 
 typedef struct {
     long address;
@@ -36,21 +37,16 @@ void add_loc(long address, long value) {
 
 long sum() {
     long result = 0;
-    char buffer[50]; // debug
-    void longtobinstr(long,char*,int); // debug
     for(int i=0; i<memory_size; i++) {
         result += memory[i].value;
-        longtobinstr(result,buffer,36); // debug
-        printf("Addr: %ld, Val: >>%s<<\n",memory[i].address,buffer); // debug
     }
     return result;
 }
-    
 
 long run(char *path) {
     char mask[LINE_LEN];
-    long mask0;
-    long mask1;
+    long mask0 = 0;
+    long mask1 = 0;
     long power = 1;
     long address;
     long number;
@@ -62,9 +58,11 @@ long run(char *path) {
         // this next bit is a little hacky, but hey, it works!
         if(line[1] == 'a') {
             // mask stuff
-            sscanf(line,"mask = %s",&mask);
-            int i = 0;
-            while(mask[i] != '\0' && mask[i] != EOF) {
+            printf(">>%ld<<\n",sum()); // debug
+            // cleanup
+            mask0 = 0; mask1 = 0;
+            sscanf(line,"mask = %s",mask);
+            for(int i=VALUE_WIDTH-1; i>=0; i--) {
                 switch(mask[i]) {
                     case 'X':
                         mask0 += power;
@@ -79,10 +77,9 @@ long run(char *path) {
                         printf("Error in text processing:\n<<%c>>",mask[i]);
                         abort();
                 }
-                i++;
                 power <<= 1;
             }
-            // printf("given: %s\nmask0: %ld\nmask1: %ld\n",mask,mask0,mask1);  // debug
+            char buf[100];
         } else if(line[1] == 'e') {
             // mem stuff
             sscanf(line,"mem[%ld] = %ld",&address,&number);
@@ -122,6 +119,7 @@ void longtobinstr(long num, char *binstr, int width) {
 
 
 int main() {
+    // run("./Day14-input.txt");
     run("./gija");
     printf("%ld\n",sum());
 }

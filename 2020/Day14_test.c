@@ -27,7 +27,7 @@ int longtobinstr_test() {
         { 4, 3, "100" },
         { 67, 7, "1000011" },
         { 7, 5, "00111" },
-        { -1, -1, ""} // this acts like a \0; it not an actual example
+        { -1, -1, ""} // this acts like a \0; it is not an actual example
     };
     int num_examples = 0;
     while(examples[num_examples].number >= 0) num_examples++;
@@ -50,13 +50,32 @@ int longtobinstr_test() {
     // cleanup
     free(buffer);
     if(has_erred) printf("%s\n",message);
-    else printf("All tests passed!\n");
     free(message);
     free(tmp_msg);
     return has_erred;
 }
 
+typedef struct {
+    int (*func)();
+    char name[50];
+} Test;
+
+int dummy() { return -1; }
 
 int main() {
-    longtobinstr_test();
+    Test tests[] = {
+        { &longtobinstr_test, "longtobinstr", },
+        { &dummy, "", },
+    };
+    int i = 0;
+    int num_failed = 0;
+    while(tests[i].name[0] != '\0') {
+        if((tests[i].func)()) {
+            printf("\x1b[1;31mTest >>%s<< failed!\x1b[0m\n",tests[i].name);
+            num_failed++;
+        }
+        i++;
+    }
+    if(num_failed == 0) printf("\x1b[1;32mAll tests passed!\x1b[0m\n");
+    else printf("\x1b[1;31m%d\x1b[0m of \x1b[1m%d\x1b[0m tests failed!\n",num_failed,i);
 }

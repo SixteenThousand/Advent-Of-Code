@@ -55,6 +55,10 @@ int longtobinstr_test() {
     return has_erred;
 }
 
+int get_val_ref_TEST() {
+    return 1;
+}
+
 typedef struct {
     int (*func)();
     char name[50];
@@ -65,6 +69,7 @@ int dummy() { return -1; }
 int main() {
     Test tests[] = {
         { &longtobinstr_test, "longtobinstr", },
+        { &get_val_ref_TEST, "get_val_ref", },
         { &dummy, "", },
     };
     int i = 0;

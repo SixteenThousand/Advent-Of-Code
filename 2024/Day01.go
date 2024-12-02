@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	// "math"
 	"os"
 	"slices"
 	"strconv"
@@ -10,10 +9,15 @@ import (
 )
 
 func main() {
-	fmt.Println(part1("Day01-input"))
+	fmt.Println(part2("Day01-input"))
 }
 
-func part1(inputFile string) int {
+type Lists struct {
+	list1 []int
+	list2 []int
+}
+
+func getLists(inputFile string) Lists {
 	input, err := os.ReadFile(inputFile)
 	if err != nil {
 		panic(err)
@@ -40,9 +44,38 @@ func part1(inputFile string) int {
 	}
 	slices.Sort(list1)
 	slices.Sort(list2)
+	return Lists{
+		list1,
+		list2,
+	}
+}
+
+func part1(inputFile string) int {
+	data := getLists(inputFile)
 	result := 0
-	for i := 0; i < len(list1); i++ {
-		result += max(list1[i]-list2[i], list2[i]-list1[i])
+	for i := 0; i < len(data.list1); i++ {
+		result += max(data.list1[i]-data.list2[i], data.list2[i]-data.list1[i])
+	}
+	return result
+}
+
+func part2(inputFile string) int {
+	data := getLists(inputFile)
+	result := 0
+	var count int
+	for i := 0; i < len(data.list1); i++ {
+		count = 0
+		for j := 0; j < len(data.list2); j++ {
+			if data.list2[j] != data.list1[i] {
+				if count > 0 {
+					break
+				} else {
+					continue
+				}
+			}
+			count++
+		}
+		result += count * data.list1[i]
 	}
 	return result
 }
